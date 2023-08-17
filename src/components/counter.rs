@@ -22,10 +22,11 @@ pub fn Counter(cx: Scope) -> impl IntoView {
     };
 
     view! { cx,
-    <div class="container">
+    <div>
         <button
         on:click=handle_decrease_click
         disabled=move || count.get() == INITIAL_COUNT
+        class="bg-black"
         >
         "Decrease"
         </button>

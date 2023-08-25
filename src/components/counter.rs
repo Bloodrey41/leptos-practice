@@ -1,5 +1,7 @@
 use leptos::{*, leptos_dom::console_log};
 
+use crate::components::ui::button::Button;
+
 const INITIAL_COUNT: u8 = 0;
 
 const MAX_COUNT: u8 = 10;
@@ -22,31 +24,45 @@ pub fn Counter(cx: Scope) -> impl IntoView {
     };
 
     view! { cx,
-    <div>
-        <button
+    <div class="w-1/4 p-3">
+        <Button
         on:click=handle_decrease_click
         disabled=move || count.get() == INITIAL_COUNT
-        class="bg-black"
+        class="w-1/3"
         >
         "Decrease"
-        </button>
+        </Button>
         <span
+        class="inline-block w-1/3 text-xl text-center text-zinc-100"
         class:even=move || count.get() % 2 == 0
               class:odd=move || count.get() % 2 == 1
                     >
                     " "{count}" "
                     </span>
-                    <button
+                    <Button
                     on:click=handle_increase_click
                     disabled=move || count.get() == MAX_COUNT
+                    class="w-1/3"
                     >
                     "Increase"
-                    </button>
+                    </Button>
                     <br />
                     <progress
                     max=MAX_COUNT
                     value=move || count.get()
+                    class="relative w-full h-4 mt-2 overflow-hidden rounded-full bg-zinc-100"
                     />
-                    </div>
+                    <br />
+                    <span
+                    class="inline-block w-full text-2xl text-center text-zinc-100"
+                    >
+                    <Show
+                    when=move || count.get() % 2 == 0
+                    fallback=|cx| view! { cx, "Odd" }
+    >
+        "Even"
+        </Show>
+        </span>
+        </div>
     }
 }

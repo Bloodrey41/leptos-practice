@@ -1,4 +1,4 @@
-use leptos::{*, leptos_dom::console_log};
+use leptos::*;
 
 use crate::components::ui::button::Button;
 
@@ -12,7 +12,7 @@ pub fn Counter(cx: Scope) -> impl IntoView {
 
     create_effect(cx, move |_| {
         let count = format!("count: {}", count.get());
-        console_log(&count);
+        log!("{}", count);
     });
 
     let handle_increase_click = move |_| {
@@ -24,7 +24,7 @@ pub fn Counter(cx: Scope) -> impl IntoView {
     };
 
     view! { cx,
-    <div class="w-1/4 p-3">
+    <div class="absolute w-1/4 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <Button
         on:click=handle_decrease_click
         disabled=move || count.get() == INITIAL_COUNT

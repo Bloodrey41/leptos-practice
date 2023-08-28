@@ -24,7 +24,7 @@ pub fn Counter(cx: Scope) -> impl IntoView {
     };
 
     view! { cx,
-    <div class="absolute w-1/4 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+    <div class="absolute w-1/4 p-4 rounded top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-zinc-900">
         <Button
         on:click=handle_decrease_click
         disabled=move || count.get() == INITIAL_COUNT
@@ -33,7 +33,7 @@ pub fn Counter(cx: Scope) -> impl IntoView {
         "Decrease"
         </Button>
         <span
-        class="inline-block w-1/3 text-xl text-center text-zinc-100"
+        class="inline-block w-1/3 text-xl text-center"
         class:even=move || count.get() % 2 == 0
               class:odd=move || count.get() % 2 == 1
                     >
@@ -54,7 +54,7 @@ pub fn Counter(cx: Scope) -> impl IntoView {
                     />
                     <br />
                     <span
-                    class="inline-block w-full text-2xl text-center text-zinc-100"
+                    class="inline-block w-full text-2xl text-center"
                     >
                     <Show
                     when=move || count.get() % 2 == 0

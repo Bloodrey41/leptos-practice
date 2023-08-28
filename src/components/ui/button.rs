@@ -1,4 +1,4 @@
-use leptos::{*};
+use leptos::*;
 
 #[component]
 pub fn Button<F: Fn() -> bool + 'static>(

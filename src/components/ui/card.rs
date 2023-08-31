@@ -4,6 +4,7 @@ use leptos::*;
 pub fn Card(
     cx: Scope,
     children: Children,
+    #[prop(optional)]
     class: &'static str
 ) -> impl IntoView {
     view! { cx,
@@ -19,6 +20,7 @@ pub fn Card(
 pub fn CardHeader(
     cx: Scope,
     children: Children,
+    #[prop(optional)]
     class: &'static str
 ) -> impl IntoView {
     view! { cx,
@@ -34,6 +36,7 @@ pub fn CardHeader(
 pub fn CardTitle(
     cx: Scope,
     children: Children,
+    #[prop(optional)]
     class: &'static str
 ) -> impl IntoView {
     view! { cx,
@@ -49,6 +52,7 @@ pub fn CardTitle(
 pub fn CardDescription(
     cx: Scope,
     children: Children,
+    #[prop(optional)]
     class: &'static str
 ) -> impl IntoView {
     view! { cx,
@@ -64,6 +68,7 @@ pub fn CardDescription(
 pub fn CardContent(
     cx: Scope,
     children: Children,
+    #[prop(optional)]
     class: &'static str
 ) -> impl IntoView {
     view! { cx,
@@ -79,6 +84,7 @@ pub fn CardContent(
 pub fn CardFooter(
     cx: Scope,
     children: Children,
+    #[prop(optional)]
     class: &'static str
 ) -> impl IntoView {
     view! { cx,

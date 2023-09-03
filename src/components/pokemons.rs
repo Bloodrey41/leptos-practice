@@ -28,7 +28,7 @@ struct Type {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct Types {
     #[serde(rename = "type")]
-    t: Type
+    typo: Type
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -50,7 +50,7 @@ struct PokemonsResponse {
 }
 
 async fn get_pokemons() -> Result<PokemonsResponse, Box<dyn std::error::Error>> {
-    let res = reqwest::get("https://pokeapi.co/api/v2/pokemon")
+    let res = reqwest::get("https://pokeapi.co/api/v2/pokemon?limit=6&offset=0")
         .await?
         .json::<PokemonsResponse>()
         .await?;
@@ -70,7 +70,7 @@ pub fn Pokemons(cx: Scope) -> impl IntoView {
     );
 
     view! { cx,
-    <div class="absolute w-3/4 p-4 rounded top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-zinc-900">
+    <div class="absolute w-3/4 p-4 rounded top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-zinc-900 h-5/6 overflow-scroll">
         <Suspense
         fallback=move || view! { cx, <p>"Loading..."</p> }
     >
@@ -98,29 +98,31 @@ fn PokemonCard(
     pokemon_name: String
 ) -> impl IntoView {
     let pokemon = create_resource(cx,
-        || (),
-        |_| async move {
-            let data = get_pokemon(pokemon_name).await;
+        move || pokemon_name.clone(),
+        |name| async move {
+            let data = get_pokemon(name).await;
             let pokemon = data.unwrap();
             pokemon
         }
     );
-
+    
     view! { cx,
-    <Card class="inline-block w-[calc(33.3%-0.75rem)] mx-1">
-    {pokemon.read(cx)
+    <Card class="inline-block w-[calc(33.3%-0.75rem)] m-1">
+    {move || pokemon.read(cx)
         .map(|pokemon| view! { cx,
             <CardHeader>
-                //<img src=pokemon.sprites.other.official_artwork />
+                <img src=pokemon.sprites.other.official_artwork.front_default />
                 <CardDescription>
-                "#0001"
+                #{pokemon.id}
                 </CardDescription>
                 <CardTitle>
                 {pokemon.name}
                 </CardTitle>
                 </CardHeader>
                 <CardContent>
-                <Badge>"grass"</Badge>
+                {pokemon.types.into_iter()
+                    .map(|typo| view! { cx, <Badge class="mx-px">{typo.typo.name}</Badge> })
+                .collect_view(cx)}
                 </CardContent>
         })}
         </Card>

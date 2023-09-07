@@ -16,11 +16,11 @@ pub fn Counter(cx: Scope) -> impl IntoView {
     });
 
     let handle_increase_click = move |_| {
-        set_count.update(|n| *n += 1);
+        set_count.update(|count| *count += 1);
     };
 
     let handle_decrease_click = move |_| {  
-        set_count.update(|n| *n -= 1);
+        set_count.update(|count| *count -= 1);
     };
 
     view! { cx,

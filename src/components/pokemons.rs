@@ -7,39 +7,45 @@ use crate::model::pokemon::PokemonMac;
 
 #[component]
 pub fn Pokemons(cx: Scope) -> impl IntoView {
-    let (limit, set_limit) = create_signal(cx, 6);
+    // (limit = 6, offset = 0)
+    let (page, set_page) = create_signal(cx, (6, 0));
 
-    let pokemons = create_resource(cx,
-        move || limit.get(),
-        |limit| async move {
-            let data = PokemonMac::list(limit, 0).await;
+    let (pokemons, set_pokemons) = create_signal(cx, Vec::new());
+
+    let results = create_resource(cx,
+        move || page.get(),
+        |page| async move {
+            let data = PokemonMac::list(page.0, page.1).await;
             let pokemons = data.unwrap();
             let results = pokemons.results;
             results
         }
     );
 
+    create_effect(cx, move |_| {
+        results.read(cx).map(|results| results.into_iter().for_each(|result| {
+            set_pokemons.update(|pokemons| pokemons.push(result.name));
+        }));
+    });
+
     let handle_show_more_click = move |_| {
-        set_limit.update(|n| *n += 3);
+        set_page.update(|page| *page = (3, page.1 + if page.1 == 0 { 6 } else { 3 }));
     };
 
     view! { cx,
     <div class="absolute w-3/4 p-4 rounded top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-zinc-900 h-5/6 overflow-scroll">
-        <Suspense
-        fallback=move || view! { cx, <p>"Loading..."</p> }
-    >
-    {move || pokemons.read(cx).map(|pokemons| pokemons.into_iter()
-        .map(|pokemon| view! { cx, <PokemonCard pokemon_name=pokemon.name /> })
-        .collect_view(cx))
-    }
-    </Suspense>
-                    <Button
-                    on:click=handle_show_more_click
-                    class="inline-block w-full text-2xl text-center"
-                    disabled=|| false
-                    >
-                    "Show more"
-                    </Button>
+        <For
+        each=move || pokemons.get()
+        key=|pokemon| pokemon.clone()
+        view=move |cx, pokemon| view! { cx, <PokemonCard pokemon_name=pokemon /> }
+    />
+        <Button
+        on:click=handle_show_more_click
+        class="inline-block w-full text-2xl text-center"
+        disabled=|| false
+        >
+        "Show more"
+        </Button>
         </div>
     }
 }
